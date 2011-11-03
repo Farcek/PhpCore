@@ -7,7 +7,15 @@
  */
 
 namespace myLib;
+/**
+ * @classIntTag myBaseInterface
+ */
 interface myBaseInterface {
+    /**
+     * @abstract
+     * @return void
+     * @intfase myInterfaceMBase
+     */
     function myInterfaceMBase();
 }
 

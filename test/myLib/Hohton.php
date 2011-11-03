@@ -17,7 +17,12 @@ namespace myLib;
  * 
  * @hoiinTo 4
  */
-class Hohton {
+class Hohton implements myInterface,myBaseInterface {
+    /**
+     * ene shorder desc
+     * @var 3
+     */
+    private  $pro;
     /**
      * Nas
      *
@@ -41,5 +46,10 @@ class Hohton {
 
     function baseMethod(){
         
+    }
+
+    function myInterfaceMBase()
+    {
+        // TODO: Implement myInterfaceMBase() method.
     }
 }

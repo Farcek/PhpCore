@@ -12,7 +12,14 @@ namespace myLib;
  *
  * @isChild true
  */
-class Child extends Hohton implements myChildInterfase{
+class Child extends Hohton implements myChildInterfase,myInterface1{
+
+    /**
+     *
+     * pro long desc
+     * @var 1
+     */
+    var $pro;
 
     /**
      * zaluu child checker
@@ -27,6 +34,10 @@ class Child extends Hohton implements myChildInterfase{
         return parent::ZaluuNas();
     }
 
+    /**
+     * @tag1 void
+     * @tag2 void
+     */
     function myInterfaceMBase()
     {
         // TODO: Implement myInterfaceMBase() method.

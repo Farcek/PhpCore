@@ -6,6 +6,14 @@
  * Time: 12:42 AM
  */
 namespace myLib;
+/**
+ * @classIntTag myChildInterfase
+ */
 interface myChildInterfase extends myBaseInterface{
+    /**
+     * @abstract myChildInterfase
+     * @return myChildInterfase
+     * @interfasetag myInterfaceMChild
+     */
     function myInterfaceMChild();
 }

@@ -46,7 +46,7 @@ final class DockBlock extends Object
                 $cur .= "\n $it";
                 continue;
             }
-            if ($shortDesc && $it === false) {
+            if (/*$shortDesc && */$it === false) {
                 $cur = &$longDesc;
             }
         }
@@ -60,15 +60,30 @@ final class DockBlock extends Object
     }
 
 
+    private static function classMap(\ReflectionClass $class)
+    {
+        $list = array();
+        while ($class instanceof \ReflectionClass) {
+            $list[$class->getName()] = $class;
+            foreach ($class->getInterfaces() as $cls) {
+                $n = $cls->getName();
+                if (isset($list[$n])) {
+                    unset($list[$n]);
+                }
+                $list[$n] = $cls;
+            }
+            $class = $class->getParentClass();
+        }
+        return $list;
+    }
+
     static function ClassParser(\ReflectionClass $class)
     {
-
-
         $shortDesc = null;
         $longDesc = null;
         $tags = array();
-        while ($class instanceof \ReflectionClass) {
-            $tmp = self::Parser($class->getDocComment());
+        foreach (self::classMap($class) as $cls) {
+            $tmp = self::Parser($cls->getDocComment());
             if ($shortDesc == null && $tmp->shortDesc)
                 $shortDesc = $tmp->shortDesc;
             if ($longDesc == null && $tmp->longDesc)
@@ -76,7 +91,6 @@ final class DockBlock extends Object
             foreach ($tmp->tags as $tag) {
                 $tags[] = $tag;
             }
-            $class = $class->getParentClass();
         }
 
         return new DockBlock(
@@ -90,28 +104,50 @@ final class DockBlock extends Object
 
     static function MethodParser(\ReflectionMethod $method)
     {
-        $mts = array($method);
-        $cls = $method->getDeclaringClass()->getParentClass();
-        while ($cls && $cls->hasMethod($method->getName())) {
-            $mts[] = $cls->getMethod($method->getName());
-            $cls = $cls->getParentClass();
-        }
-
-        $cls->getInterfaces();
-        
+        $list = self::classMap($method->getDeclaringClass());
         $shortDesc = null;
         $longDesc = null;
         $tags = array();
-        foreach ($mts as $it) {
-            $tmp = self::Parser($it->getDocComment());
-            if ($shortDesc == null && $tmp->shortDesc)
-                $shortDesc = $tmp->shortDesc;
+        foreach ($list as $cls) {
+            $methodName = $method->getName();
+            if ($cls->hasMethod($methodName)){
+                $mt = $cls->getMethod($methodName);
+                $tmp = self::Parser($mt->getDocComment());
+                if ($shortDesc == null && $tmp->shortDesc)
+                    $shortDesc = $tmp->shortDesc;
+                if ($longDesc == null && $tmp->longDesc)
+                    $longDesc = $tmp->longDesc;
+                foreach ($tmp->tags as $tag) {
+                    $tags[] = $tag;
+                }
+            }
+        }
+        return new DockBlock(
+            array(
+                 'shortDesc' => $shortDesc,
+                 'longDesc' => $longDesc,
+                 'tags' => $tags
+            )
+        );
+    }
 
-            if ($longDesc == null && $tmp->longDesc)
-                $longDesc = $tmp->longDesc;
-
-            foreach ($tmp->tags as $tag) {
-                $tags[] = $tag;
+    static function PropertyParser(\ReflectionProperty $property)
+    {
+        $list = self::classMap($property->getDeclaringClass());
+        $shortDesc = null;
+        $longDesc = null;
+        $tags = array();
+        foreach ($list as $cls) {
+            $proName = $property->getName();
+            if ($cls->hasProperty($proName)) {
+                $tmp = self::Parser($cls->getProperty($proName)->getDocComment());
+                if ($shortDesc == null && $tmp->shortDesc)
+                    $shortDesc = $tmp->shortDesc;
+                if ($longDesc == null && $tmp->longDesc)
+                    $longDesc = $tmp->longDesc;
+                foreach ($tmp->tags as $tag) {
+                    $tags[] = $tag;
+                }
             }
         }
         return new DockBlock(
