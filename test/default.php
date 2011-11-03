@@ -21,15 +21,24 @@ $ev->addListeners("eventHandler");
 $ev->fire(null,15);
 
 function eventHandler(PhpCore\Event\Args $p,$target){
-    var_dump("eventHandler",$p,$target);
+    var_dump("----------","eventHandler", $p->evetName);
 }
-
-
 $double = function($a) {
     return $a * 2;
 };
+var_dump($double);
+
+$cls = new ReflectionClass("myLib\Child");
+$c = PhpCore\Annotation\DockBlock::Parser($cls->getMethod('send')->getDocComment());
+var_dump($c);
+
+$c = PhpCore\Annotation\DockBlock::MethodParser($cls->getMethod('baseMethod'));
+var_dump($c,"---");
+$c = PhpCore\Annotation\DockBlock::MethodParser($cls->getMethod('send'));
+var_dump($c);
 
 
-PhpCore\Annotation::classAnnotations($product);
-PhpCore\Annotation::methodAnnotations($product,'save');
-PhpCore\Annotation::propertyAnnotations($product,'saveEvent');
+
+//PhpCore\Annotation::classAnnotations($product);
+//PhpCore\Annotation::methodAnnotations($product,'save');
+//PhpCore\Annotation::propertyAnnotations($product,'saveEvent');

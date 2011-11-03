@@ -43,7 +43,7 @@ class Product extends \PhpCore\Object{
     
     function onSave(\PhpCore\Event\Args $ev, $target){
         //$ev->cancel = true;
-       var_dump("onSave",$ev->param);
+       var_dump("onSave");
 
     }
 

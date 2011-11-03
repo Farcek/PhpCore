@@ -7,7 +7,7 @@
  */
 
 namespace PhpCore\Annotation;
-class DockBlock
+final class DockBlock
 {
     protected $shortDesc;
     protected $longDesc;
@@ -19,12 +19,7 @@ class DockBlock
     }
 
 
-    /**
-     * @static
-     * @throws Exception
-     * @param string $text
-     * @return DockBlock
-     */
+
     static function Parser($text)
     {
         $dd = explode("\n", $text);
@@ -47,8 +42,8 @@ class DockBlock
         }
 
 
-        $shortDesc = "";
-        $longDesc = "";
+        $shortDesc = null;
+        $longDesc = null;
         $cur = &$shortDesc;
         foreach ($descLines as $k => $it) {
             if ($it || $longDesc) {
@@ -59,7 +54,42 @@ class DockBlock
                 $cur = &$longDesc;
             }
         }
-
         return new DockBlock(trim($shortDesc),trim($longDesc),$tags);
+    }
+
+
+
+    static function fullParser($ref){
+        if($ref instanceof \ReflectionMethod){
+            $ref->getDocComment();
+        }
+    }
+
+    static function MethodParser(\ReflectionMethod $method){
+        $mts = array($method);
+        $cls = $method->getDeclaringClass()->getParentClass();
+        while($cls && $cls->hasMethod($method->getName())){
+            $mts[]=$cls->getMethod($method->getName());
+            $cls = $cls->getParentClass();
+        }
+
+        $shortDesc =null;
+        $longDesc = null;
+        $tags = array();
+        foreach($mts as $it){
+               $tmp = self::Parser($it->getDocComment());
+               if( $shortDesc != null && $tmp->shortDesc)
+                $shortDesc = $tmp->shortDesc;
+
+            if( $longDesc != null && $tmp->longDesc)
+                $longDesc = $tmp->longDesc;
+
+            foreach($tmp->tags as $tag){
+                $tags[]=$tag;
+            }
+        }
+
+        return new DockBlock($shortDesc,$longDesc,$tags);
+
     }
 }
