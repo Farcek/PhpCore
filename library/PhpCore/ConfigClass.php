@@ -7,7 +7,7 @@
  */
 
 namespace PhpCore;
-class ConfigClass implements \Iterator
+class ConfigClass extends Object  implements \Iterator
 {
     protected $_data;
 

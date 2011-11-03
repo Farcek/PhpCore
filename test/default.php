@@ -23,3 +23,13 @@ $ev->fire(null,15);
 function eventHandler(PhpCore\Event\Args $p,$target){
     var_dump("eventHandler",$p,$target);
 }
+
+
+$double = function($a) {
+    return $a * 2;
+};
+
+
+PhpCore\Annotation::classAnnotations($product);
+PhpCore\Annotation::methodAnnotations($product,'save');
+PhpCore\Annotation::propertyAnnotations($product,'saveEvent');

@@ -7,12 +7,28 @@
  */
 
 namespace myLib;
+
+/**
+ * 
+ * short desc
+ *
+ * ene logg dicription shuu
+ * za yu
+ *
+ * 
+ * @className parsing
+ * @new line string
+ *
+ * @mattel (sunk="32",statis=343)
+ * @zayu
+ */
 class Product extends \PhpCore\Object{
     var $name;
     var $code;
 
 
     var $saveEvent;
+
     function __construct(){
         $this->saveEvent = new \PhpCore\Event("Product.save");
         $this->saveEvent->addListeners(array($this,"onSave"));
@@ -30,5 +46,6 @@ class Product extends \PhpCore\Object{
        var_dump("onSave",$ev->param);
 
     }
+
 
 }
