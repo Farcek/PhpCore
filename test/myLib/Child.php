@@ -43,6 +43,10 @@ class Child extends Hohton implements myChildInterfase,myInterface1{
         // TODO: Implement myInterfaceMBase() method.
     }
 
+    /**
+     * @return void
+     * @sanaa
+     */
     function myInterfaceMChild()
     {
         // TODO: Implement myInterfaceMChild() method.

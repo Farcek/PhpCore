@@ -14,20 +14,20 @@ $cls = new myLib\Child();
 //$c = new ReflectionClass($cls);
 //var_dump($c->getInterfaces());die;
 
-$c = PhpCore\DockBlock::ClassParser(new ReflectionClass($cls));
+$c = PhpCore\DocBlock::ClassParser(new ReflectionClass($cls));
 
 var_dump($c);
 
 echo "------------------ Method\n";
 $cls = new myLib\Child();
 
-$c = PhpCore\DockBlock::MethodParser(new ReflectionMethod($cls,'myInterfaceMChild'));
+$c = PhpCore\DocBlock::MethodParser(new ReflectionMethod($cls,'myInterfaceMChild'));
 
 var_dump($c);
 echo "------------------ Property\n";
 $cls = new myLib\Child();
 
-$c = PhpCore\DockBlock::PropertyParser(new ReflectionProperty($cls,'pro'));
+$c = PhpCore\DocBlock::PropertyParser(new ReflectionProperty($cls,'pro'));
 
 var_dump($c);
 

@@ -7,16 +7,19 @@
  */
 
 namespace PhpCore;
-final class DockBlock extends Object
+final class DocBlock extends Object
 {
     protected $shortDesc;
     protected $longDesc;
     protected $tags = array();
 
+    
+
+
     /**
      * @static
      * @param $text
-     * @return DockBlock
+     * @return DocBlock
      */
     static function Parser($text)
     {
@@ -26,15 +29,15 @@ final class DockBlock extends Object
             $lines[] = substr(trim($dd[$i]), 2);
         }
 
-        $tags = array();
+        $tagValues = array();
         $descLines = array();
         foreach ($lines as $it) {
             if (stripos($it, "@") === 0) {
-                $tags[] = $it;
-            } else if (empty($tags))
+                $tagValues[] = $it;
+            } else if (empty($tagValues))
                 $descLines[] = $it;
-            else if (!empty($tags)) {
-                $tags[count($tags) - 1] .= " $it";
+            else if (!empty($tagValues)) {
+                $tagValues[count($tagValues) - 1] .= " $it";
             }
         }
 
@@ -50,7 +53,13 @@ final class DockBlock extends Object
                 $cur = &$longDesc;
             }
         }
-        return new DockBlock(
+        $tags = array();
+        foreach($tagValues as $it){
+
+            @list($tag,$value) = explode(" ",$it,2);
+            $tags[]= new \PhpCore\DocBlock\Tag(array('name'=>substr( $tag,1),'value'=>$value));
+        }
+        return new DocBlock(
             array(
                  'shortDesc' => trim($shortDesc),
                  'longDesc' => trim($longDesc),
@@ -93,7 +102,7 @@ final class DockBlock extends Object
             }
         }
 
-        return new DockBlock(
+        return new DocBlock(
             array(
                  'shortDesc' => $shortDesc,
                  'longDesc' => $longDesc,
@@ -122,7 +131,7 @@ final class DockBlock extends Object
                 }
             }
         }
-        return new DockBlock(
+        return new DocBlock(
             array(
                  'shortDesc' => $shortDesc,
                  'longDesc' => $longDesc,
@@ -150,7 +159,7 @@ final class DockBlock extends Object
                 }
             }
         }
-        return new DockBlock(
+        return new DocBlock(
             array(
                  'shortDesc' => $shortDesc,
                  'longDesc' => $longDesc,
