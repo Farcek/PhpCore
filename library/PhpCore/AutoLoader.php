@@ -11,6 +11,9 @@ class AutoLoader {
         $this->registerSystem();
     }
     private $namespaces = array();
+    public function getRegisterNamespace(){
+        return $this->namespaces;
+    }
     public function  registerNamespace(AutoLoaderParam $param){
         $this->namespaces[$param->namespace] = $param;
     }
