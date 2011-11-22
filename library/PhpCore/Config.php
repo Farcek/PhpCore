@@ -7,13 +7,14 @@
  */
 
 namespace PhpCore;
-class ConfigClass extends Object  implements \Iterator
+class Config extends Object implements \Iterator
 {
     protected $_data;
 
-    function __construct(array $initData)
+    function __construct(array $initData = null)
     {
-        $this->_data = $initData;
+        if ($initData)
+            $this->_data = $initData;
     }
 
 

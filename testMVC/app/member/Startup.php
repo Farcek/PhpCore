@@ -8,5 +8,12 @@
 
 namespace app\member;
 class Startup extends \PhpCore\Module\Startup{
-public static $ss=1;
+    /**
+     * @startup
+     * @return void
+     */
+    function registerModule()
+    {
+        $this->addModule(new modules\Startup());
+    }
 }

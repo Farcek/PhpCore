@@ -28,12 +28,22 @@ class wp extends \PhpCore\Module\Startup
      */
     function registerModule()
     {
-        app\member\Startup::$ss;
         $this->addModule(new app\member\Startup());
         $this->addModule(new app\www\Startup());
+    }
+    /**
+     * @startup
+     * @return void
+     */
+    function app2register()
+    {
         $this->addModule(new app2\mods\www\Startup());
     }
+
+    
 }
 
 $c = new wp();
-$c->registerModule();
+$c->doRegisterModule();
+
+var_dump($c);

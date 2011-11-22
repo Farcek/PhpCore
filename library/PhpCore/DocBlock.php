@@ -13,8 +13,18 @@ final class DocBlock extends Object
     protected $longDesc;
     protected $tags = array();
 
-    
-
+    /**
+     * @param $tagName string
+     * @return bool
+     */
+    public function existsTag($tagName){
+        
+        foreach($this->tags as $tag){
+            if($tag->name == $tagName)
+                return true;
+        }
+        return false;
+    }
 
     /**
      * @static
