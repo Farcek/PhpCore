@@ -16,4 +16,9 @@ class Startup extends \PhpCore\Module\Startup{
     {
         $this->addModule(new modules\Startup());
     }
+
+    function registerRoute(\PhpCore\Route\Collection &$route ){
+        $route->addRoute("/app/mem/:newsTypeId");
+        $route->addRoute("/app/mem/read/:newsId");
+    }
 }

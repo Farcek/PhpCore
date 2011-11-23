@@ -40,10 +40,19 @@ class wp extends \PhpCore\Module\Startup
         $this->addModule(new app2\mods\www\Startup());
     }
 
+    function registerRoute(PhpCore\Route\Collection &$route ){
+        var_dump("run registerRoute");
+        $route->addRoute("/news/:newsTypeId");
+        $route->addRoute("/news/read/:newsId");
+    }
+
     
 }
 
 $c = new wp();
-$c->doRegisterModule();
 
+$c->doRegisterModule();
+$c->setRouteCollection(new PhpCore\Route\Collection());
+$c->doRegisterRoute();
 var_dump($c);
+var_dump($c->getRouteCollection());

@@ -11,33 +11,55 @@ abstract class Startup extends \PhpCore\Object
 {
     function __construct()
     {
-        
+
     }
 
-    static private $routes = array();
-
     private $modules = array();
+    private $routes = array();
 
     protected function addModule(Startup $module)
     {
         $moduleName = get_class($module);
         if (isset($this->modules[$moduleName]))
-            throw new Exception\DuplicateModule("registered module #" . $moduleName);
-
-        $this->modules[get_class($module)] = $module;
+            throw new \PhpCore\Module\Exception\DuplicateModule("registered module#" . $moduleName);
+        $this->modules[$moduleName] = $module;
     }
 
-    public function doRegisterModule()
+    protected function addRoutes(\PhpCore\Route\Base $route)
     {
-        $methods = $this->getMethodsFromTagName("startup");
-        foreach ($methods as $mt) {
-            $mt->invoke($this);
-        }
-        foreach($this->modules as $module)
-            $module->doRegisterModule();
+        $key = $route->getKey();
+        if (isset($this->routes[$key]))
+            throw new \PhpCore\Route\Exception\DuplicateRoute ("registered routeKey#" . $key);
+        $this->modules[$key] = $route;
     }
 
-    public function doRegisterRoute(){
-        
+    public function getModules()
+    {
+        return $this->modules;
+    }
+
+    public function getRoutes()
+    {
+        return $this->routes;
+    }
+
+    public function setup()
+    {
+        $this->registerModule();
+        $this->registerRoute();
+        foreach ($this->modules as $module) {
+            $module->setup();
+        }
+    }
+
+
+    function registerModule()
+    {
+
+    }
+
+    function registerRoute()
+    {
+
     }
 }
