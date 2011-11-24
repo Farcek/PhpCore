@@ -17,7 +17,7 @@ abstract class Startup extends \PhpCore\Object
     private $modules = array();
     private $routes = array();
 
-    protected function addModule(Startup $module)
+    protected function addModule(\PhpCore\Module\Startup $module)
     {
         $moduleName = get_class($module);
         if (isset($this->modules[$moduleName]))
@@ -30,7 +30,7 @@ abstract class Startup extends \PhpCore\Object
         $key = $route->getKey();
         if (isset($this->routes[$key]))
             throw new \PhpCore\Route\Exception\DuplicateRoute ("registered routeKey#" . $key);
-        $this->modules[$key] = $route;
+        $this->routes[$key] = $route;
     }
 
     public function getModules()
@@ -48,6 +48,7 @@ abstract class Startup extends \PhpCore\Object
         $this->registerModule();
         $this->registerRoute();
         foreach ($this->modules as $module) {
+            var_dump($module);
             $module->setup();
         }
     }

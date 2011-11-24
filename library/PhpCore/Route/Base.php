@@ -7,9 +7,42 @@
  */
 
 namespace PhpCore\Route;
-class Base {
-    private $map;
-    function getKey(){
-        return $this->map;
+class Base
+{
+    
+
+    function getKey()
+    {
+        return $this->pattern;
     }
+
+    
+
+    private $pattern;
+
+    /**
+     * @param $pattern string
+     * @return Base
+     */
+    function setPattern($pattern)
+    {
+        $this->pattern = $pattern;
+        return $this;
+    }
+    function getPattern(){
+        return $this->pattern;
+    }
+
+    function setDefaults(array $default){
+        return $this;
+    }
+    function setRequirements(array $requirements){
+        return $this;
+    }
+
+    function matcher($request){
+        $m = new Match($this->pattern,$request);
+        return $m->equal();
+    }
+
 }

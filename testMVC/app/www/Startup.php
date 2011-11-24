@@ -8,8 +8,5 @@
 
 namespace app\www;
 class Startup extends \PhpCore\Module\Startup{
-function registerRoute(\PhpCore\Route\Collection &$route ){
-        $route->addRoute("/www/:newsTypeId");
-        $route->addRoute("/www/read/:newsId");
-    }
+    
 }
