@@ -12,7 +12,7 @@ final class Base
 {
     function __construct()
     {
-        
+
     }
 
     private $urlString;
@@ -20,7 +20,8 @@ final class Base
     function setUrlString($urlString)
     {
         $baseUrl = $this->getBaseUrl();
-        if (!empty($baseUrl) && strpos($urlString, $baseUrl) == 0)
+        $urlString = $urlString[0] == "/" ? $urlString : "/" . $urlString;
+        if (strpos($urlString, $baseUrl) === 0)
             $this->urlString = substr($urlString, strlen($baseUrl));
         else $this->urlString = $urlString;
         return $this;
@@ -39,9 +40,9 @@ final class Base
     {
         if ($this->paths == null) {
             $urlString = $this->getUrlString();
-            
+
             $position = strpos($urlString, '?');
-            
+
             if ($position)
                 $urlString = substr($urlString, 0, $position);
             $this->paths = array();
@@ -85,7 +86,8 @@ final class Base
 
     function setBaseUrl($baseUrl)
     {
-        $this->baseUrl = $baseUrl;
+        $this->baseUrl = $baseUrl[0] == "/" ? '' : '/' . $baseUrl;
+
         return $this;
     }
 

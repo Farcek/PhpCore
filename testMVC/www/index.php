@@ -6,6 +6,10 @@
  * Time: 5:01 PM
  */
 
+$keywords = preg_split("/[(news)]/", "/news/sound_archive/read_32");
+var_dump($keywords);
+die;
+
 set_include_path(implode(PATH_SEPARATOR, array(
                                               get_include_path(),
                                               realpath(dirname(__FILE__) . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . '..' . DIRECTORY_SEPARATOR . 'library')
@@ -49,29 +53,33 @@ class wp extends \PhpCore\Module\Startup
 }
 
 $rq = new \PhpCore\Request\Base();
-$rq->setBaseUrl("")->setUrlString("/news/archive/read/32?str=hello&pass=43");
-                                 ///news/list/tab/top5?page=29
+$rq->setBaseUrl("ww")->setUrlString("/ww/news/sound_archive/read_32?str=hello&pass=43");
+///news/list/tab/top5?page=29
 
+echo "<pre>";
 
-
-$v1 = "//:controller/:action";
-$v1 = "/news/read[controller]";
 
 $route = new PhpCore\Route\Base();
-$route->setPattern("/news/:controller/:action/:id")
-                 //"/news/list/:page/:cate"
+$route->setPattern("/news/sound_<:controller>/o<:action>_<:id>.html")
         ->setDefaults(array("id" => 45, "action" => "reader"))
-        ->setRequirements(array("id" => "d"));
+        ->setRequirements(array(
+                               "id" => "/d",
+                               "action" => array('reader', 'write', 'select')
+                          ));
+
+$route->getPathsInfo();
 
 var_dump($rq);
-$r = $rq->getPaths();
+var_dump($route);
 
-var_dump($r);
+echo "----------------------\n";
 
-$m = new PhpCore\Route\Match($route,$rq);
-var_dump($m->equal());
+$route->matcher($rq);
+
+
 //$c = new wp();
 //
 //$c->setup();
 //
 //var_dump($c);
+echo "</pre>";
