@@ -10,11 +10,9 @@
 namespace PhpCore\Request;
 final class Base
 {
-    function __construct($urlString = null)
+    function __construct()
     {
-        if (!empty($urlString))
-            $this->setUrlString($urlString);
-
+        
     }
 
     private $urlString;
@@ -22,7 +20,7 @@ final class Base
     function setUrlString($urlString)
     {
         $baseUrl = $this->getBaseUrl();
-        if (strpos($urlString, $baseUrl) == 0)
+        if (!empty($baseUrl) && strpos($urlString, $baseUrl) == 0)
             $this->urlString = substr($urlString, strlen($baseUrl));
         else $this->urlString = $urlString;
         return $this;
@@ -41,8 +39,9 @@ final class Base
     {
         if ($this->paths == null) {
             $urlString = $this->getUrlString();
-
+            
             $position = strpos($urlString, '?');
+            
             if ($position)
                 $urlString = substr($urlString, 0, $position);
             $this->paths = array();

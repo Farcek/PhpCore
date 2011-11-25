@@ -9,14 +9,13 @@
 namespace PhpCore\Route;
 class Base
 {
-    
+
 
     function getKey()
     {
         return $this->pattern;
     }
 
-    
 
     private $pattern;
 
@@ -29,19 +28,40 @@ class Base
         $this->pattern = $pattern;
         return $this;
     }
-    function getPattern(){
+
+    function getPattern()
+    {
         return $this->pattern;
     }
 
-    function setDefaults(array $default){
-        return $this;
-    }
-    function setRequirements(array $requirements){
+    function setDefaults(array $default)
+    {
         return $this;
     }
 
-    function matcher($request){
-        $m = new Match($this->pattern,$request);
+    function getDefaultRequirement()
+    {
+        return "/s";
+    }
+
+    private $requirements = array();
+
+    function setRequirements(array $requirements)
+    {
+        $this->requirements = $requirements;
+        return $this;
+    }
+
+    function getRequirement($key)
+    {
+        if (isset($this->requirements[$key]))
+            return $this->requirements[$key];
+        return $this->getDefaultRequirement();
+    }
+
+    function matcher($request)
+    {
+        $m = new Match($this->pattern, $request);
         return $m->equal();
     }
 

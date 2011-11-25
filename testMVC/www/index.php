@@ -33,19 +33,43 @@ class wp extends \PhpCore\Module\Startup
     {
         $route = new PhpCore\Route\Base();
         $route->setPattern("/[controller]/[action]/[id]")
-                ->setDefaults(array("id"=>45,"action"=>"reader"))
-                ->setRequirements(array("id"=>"d"));
+                ->setDefaults(array("id" => 45, "action" => "reader"))
+                ->setRequirements(array("id" => "d"));
         $this->addRoutes($route);
-        
+
         $route->matcher("/news/read?page=1&cate=1");
+        //--
+        //        $route->setPattern("/comment/[action]/[id]")
+        //                ->setDefaults(array("id"=>45,"action"=>"reader"))
+        //                ->setRequirements(array("id"=>"d"));
+        //        $this->addRoutes($route);
+        //
+        //        $route->matcher("/news/read?page=1&cate=1");
     }
 }
 
 $rq = new \PhpCore\Request\Base();
-$rq->setBaseUrl("/PhpCore/testMVC/www/index.php");
-$r = $rq->getPaths();
-var_dump($rq->GETParam());
+$rq->setBaseUrl("")->setUrlString("/news/archive/read/32?str=hello&pass=43");
+                                 ///news/list/tab/top5?page=29
 
+
+
+$v1 = "//:controller/:action";
+$v1 = "/news/read[controller]";
+
+$route = new PhpCore\Route\Base();
+$route->setPattern("/news/:controller/:action/:id")
+                 //"/news/list/:page/:cate"
+        ->setDefaults(array("id" => 45, "action" => "reader"))
+        ->setRequirements(array("id" => "d"));
+
+var_dump($rq);
+$r = $rq->getPaths();
+
+var_dump($r);
+
+$m = new PhpCore\Route\Match($route,$rq);
+var_dump($m->equal());
 //$c = new wp();
 //
 //$c->setup();
