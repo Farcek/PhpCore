@@ -59,44 +59,47 @@ class Base
         return $this->getDefaultRequirement();
     }
 
-    function matcher1(\PhpCore\Request\Base $request)
-    {
-        $paths = $this->getPathsInfo();
-        $rqString = $request->getUrlString();
-        var_dump($rqString . "\n=========================\n");
-        foreach ($paths as $k => $it) {
-            if ($it === null) {
-                $n = strlen($k);
-                $st = substr($rqString, 0, $n);
-
-                if ($k !== $st)
-                    return -1;
-                $rqString = substr($rqString, $n);
-            } elseif (is_array($it)) {
-
-            } elseif (is_string($it)) {
-
-            }
-            var_dump($rqString);
-            die;
-        }
-    }
 
     function matcher(\PhpCore\Request\Base $request)
     {
-        $paths = $this->getPathsInfo();
+        $paths = (array)$this->getPathsInfo();
         $rqString = $request->getUrlString();
         $rsu = array();
-        foreach ($paths as $k => $it) {
-            if ($it === null) {
-                $p = strpos($rqString,$k);
-                if($p===false)
+
+
+        $rank = 0;
+        $oldIndex = -1;
+        while ($it = current($paths)) {
+            $k = key($paths);
+            if (is_int($k)) {
+                $p = strpos($rqString, $it);
+                if ($p === false) {
                     return -1;
-                $rqString = substr($rqString, $p);
+                }
+                $rank ++;
+                $rqString = substr($rqString, $p + strlen($it));
+                $oldIndex = $k;
+            } elseif (is_string($k)) {
+                if (isset($paths[$oldIndex + 1])) {
+                    $nextKey = $paths[$oldIndex + 1];
+                    $p = strpos($rqString, $nextKey);
+                    if ($p === false) {
+                        return -1;
+                    }
+                    $rank ++;
+                    $rsu[$k] = $v = substr($rqString, 0, $p);
+                    
+                    $rqString = substr($rqString, $p);
+                } else {
+                    $rsu[$k] = $rqString;
+                    $rqString = "";
+                }
             }
 
-            
+            next($paths);
         }
+        return $rank;
+
     }
 
     private $pathsInfo = null;
@@ -113,14 +116,14 @@ class Base
             while ($x = strpos($p, "<:")) {
                 $pt = substr($p, 0, $x);
                 if ($pt)
-                    $this->pathsInfo[$pt] = null;
+                    $this->pathsInfo[] = $pt;
                 $e = strpos($p, ">", $x);
                 $key = substr($p, $k = $x + $bLen, $e - $k);
                 $this->pathsInfo[$key] = $this->getRequirement($key);
                 $p = substr($p, $e + $eLen);
             }
             if ($p)
-                $this->pathsInfo[$p] = null;
+                $this->pathsInfo[] = $p;
         }
         return $this->pathsInfo;
     }

@@ -6,9 +6,9 @@
  * Time: 5:01 PM
  */
 
-$keywords = preg_split("/[(news)]/", "/news/sound_archive/read_32");
-var_dump($keywords);
-die;
+//$keywords = preg_split("#(news)?(sound)#", "/news/sound:sound_archive/read_32");
+//var_dump($keywords);
+//die;
 
 set_include_path(implode(PATH_SEPARATOR, array(
                                               get_include_path(),
@@ -53,14 +53,14 @@ class wp extends \PhpCore\Module\Startup
 }
 
 $rq = new \PhpCore\Request\Base();
-$rq->setBaseUrl("ww")->setUrlString("/ww/news/sound_archive/read_32?str=hello&pass=43");
+$rq->setBaseUrl("ww")->setUrlString("/ww/news/sound_archive//top5_32.");
 ///news/list/tab/top5?page=29
 
 echo "<pre>";
 
 
 $route = new PhpCore\Route\Base();
-$route->setPattern("/news/sound_<:controller>/o<:action>_<:id>.html")
+$route->setPattern("/news/sound_<:controller>/<:action>/<:cate>_<:id>.<:format>")
         ->setDefaults(array("id" => 45, "action" => "reader"))
         ->setRequirements(array(
                                "id" => "/d",
