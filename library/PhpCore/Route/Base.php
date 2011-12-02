@@ -62,8 +62,12 @@ class Base
 
     function matcher(\PhpCore\Request\Base $request)
     {
-        $paths = (array)$this->getPathsInfo();
+        $paths = $this->getPathsInfo();
+        echo "<pre>".print_r($this->pattern,true)."</pre>";
+        echo "<pre>".print_r($paths,true)."</pre>";
+
         $rqString = $request->getUrlString();
+        echo "<pre>".print_r($rqString,true)."</pre>";
         $rsu = array();
 
 
@@ -98,6 +102,7 @@ class Base
 
             next($paths);
         }
+        echo "<pre>".print_r($rsu,true)."</pre>";
         return $rank;
 
     }
@@ -115,7 +120,7 @@ class Base
 
             while ($x = strpos($p, "<:")) {
                 $pt = substr($p, 0, $x);
-                if ($pt)
+                //if ($pt)
                     $this->pathsInfo[] = $pt;
                 $e = strpos($p, ">", $x);
                 $key = substr($p, $k = $x + $bLen, $e - $k);

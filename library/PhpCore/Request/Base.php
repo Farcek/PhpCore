@@ -24,6 +24,9 @@ final class Base
         if (strpos($urlString, $baseUrl) === 0)
             $this->urlString = substr($urlString, strlen($baseUrl));
         else $this->urlString = $urlString;
+        
+
+
         return $this;
     }
 

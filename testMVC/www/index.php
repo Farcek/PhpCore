@@ -53,15 +53,15 @@ class wp extends \PhpCore\Module\Startup
 }
 
 $rq = new \PhpCore\Request\Base();
-$rq->setBaseUrl("ww")->setUrlString("/ww/news/sound_archive//top5_32.");
+$rq->setBaseUrl("ww")->setUrlString("/ww/mn/news/sound_archive/read/box_32.xml?id1=32");
 ///news/list/tab/top5?page=29
 
 echo "<pre>";
 
 
 $route = new PhpCore\Route\Base();
-$route->setPattern("/news/sound_<:controller>/<:action>/<:cate>_<:id>.<:format>")
-        ->setDefaults(array("id" => 45, "action" => "reader"))
+$route->setPattern("/<:lang>/news/sound_<:controller>/<:action>/<:enkhchimeg>_<:id>.<:format>")
+        ->setDefaults(array(  "action" => "reader","enkhchimeg"=>'boss',"id" => 45,'format'=>'html'))
         ->setRequirements(array(
                                "id" => "/d",
                                "action" => array('reader', 'write', 'select')
@@ -69,8 +69,7 @@ $route->setPattern("/news/sound_<:controller>/<:action>/<:cate>_<:id>.<:format>"
 
 $route->getPathsInfo();
 
-var_dump($rq);
-var_dump($route);
+
 
 echo "----------------------\n";
 
