@@ -36,24 +36,24 @@ final class Base
         return $this->urlString;
     }
 
-    private $paths;
-
-    function getPaths()
-    {
-        if ($this->paths == null) {
-            $urlString = $this->getUrlString();
-
-            $position = strpos($urlString, '?');
-
-            if ($position)
-                $urlString = substr($urlString, 0, $position);
-            $this->paths = array();
-            foreach (explode("/", $urlString) as $it)
-                if (!empty($it))
-                    $this->paths[] = $it;
-        }
-        return $this->paths;
-    }
+//    private $paths;
+//
+//    function getPaths()
+//    {
+//        if ($this->paths == null) {
+//            $urlString = $this->getUrlString();
+//
+//            $position = strpos($urlString, '?');
+//
+//            if ($position)
+//                $urlString = substr($urlString, 0, $position);
+//            $this->paths = array();
+//            foreach (explode("/", $urlString) as $it)
+//                if (!empty($it))
+//                    $this->paths[] = $it;
+//        }
+//        return $this->paths;
+//    }
 
     private $params;
 
