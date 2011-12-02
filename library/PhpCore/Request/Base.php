@@ -21,9 +21,11 @@ final class Base
     {
         $baseUrl = $this->getBaseUrl();
         $urlString = $urlString[0] == "/" ? $urlString : "/" . $urlString;
-        if (strpos($urlString, $baseUrl) === 0)
+        if (!empty($baseUrl)&& strpos($urlString, $baseUrl) === 0)
             $this->urlString = substr($urlString, strlen($baseUrl));
         else $this->urlString = $urlString;
+        if ($p = strpos($this->urlString, "?"))
+            $this->urlString = substr($this->urlString, 0, $p);
         return $this;
     }
 
