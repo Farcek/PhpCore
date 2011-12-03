@@ -63,12 +63,40 @@ class Base
     function matcher(\PhpCore\Request\Base $request)
     {
         $paths = $this->getPathsInfo();
-        echo "<pre>".print_r($this->pattern,true)."</pre>";
-        echo "<pre>".print_r($paths,true)."</pre>";
+        echo "<pre>" . print_r($this->pattern, true) . "</pre>";
+        echo "<pre>" . print_r($paths, true) . "</pre>";
 
         $rqString = $request->getUrlString();
-        echo "<pre>".print_r($rqString,true)."</pre>";
+        echo "<pre>" . print_r($rqString, true) . "</pre>";
         $rsu = array();
+
+        //--------------------------------------------------
+        $position = 0;
+        $index = 0;
+        $maxPosition = strlen($rqString);
+
+        $splits = array();
+
+        while (isset($paths[$index]) && $position < $maxPosition) {
+            $part = $paths[$index++];
+            $p = strpos($rqString, $part, $position);
+            if ($p === false) {
+                break;
+            }
+
+            if ($position > 0)
+                $splits[] = substr($rqString, $position, $p - $position);
+
+
+            $position = $p + strlen($part);
+            echo "<pre>" . print_r("$p - $position - $maxPosition - $index", true) . "</pre>";
+
+        }
+        if ($position < $maxPosition) {
+            $splits[] = substr($rqString, $position);
+        }
+
+        var_dump($splits);
 
 
         $rank = 0;
@@ -80,7 +108,7 @@ class Base
                 if ($p === false) {
                     return -1;
                 }
-                $rank ++;
+                $rank++;
                 $rqString = substr($rqString, $p + strlen($it));
                 $oldIndex = $k;
             } elseif (is_string($k)) {
@@ -90,9 +118,9 @@ class Base
                     if ($p === false) {
                         return -1;
                     }
-                    $rank ++;
+                    $rank++;
                     $rsu[$k] = $v = substr($rqString, 0, $p);
-                    
+
                     $rqString = substr($rqString, $p);
                 } else {
                     $rsu[$k] = $rqString;
@@ -102,7 +130,7 @@ class Base
 
             next($paths);
         }
-        echo "<pre>".print_r($rsu,true)."</pre>";
+        echo "<pre>" . print_r($rsu, true) . "</pre>";
         return $rank;
 
     }
@@ -121,7 +149,7 @@ class Base
             while ($x = strpos($p, "<:")) {
                 $pt = substr($p, 0, $x);
                 //if ($pt)
-                    $this->pathsInfo[] = $pt;
+                $this->pathsInfo[] = $pt;
                 $e = strpos($p, ">", $x);
                 $key = substr($p, $k = $x + $bLen, $e - $k);
                 $this->pathsInfo[$key] = $this->getRequirement($key);
