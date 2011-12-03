@@ -98,11 +98,15 @@ class Base
         $index = 0;
         foreach ($paths as $k => $it) {
             if (is_string($k)) {
-                if(!isset($splits[$index]))break;
-                $k = $this->getRequirement($k);
+                if(!isset($splits[$index])){
+                    $request->setParam($k,$this->getDefault($k));
+                    continue;
+                }
+                //$kk = $this->getRequirement($k);
                 $v = $splits[$index++];
                 if(empty($v)){
-                    $request->setParam($k,$this->get)
+                    $request->setParam($k,$this->getDefault($k));
+                    continue;
                 }
                 $rq = $this->getRequirement($k);
                 if(is_string($rq) ){
