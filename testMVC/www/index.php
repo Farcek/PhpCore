@@ -53,7 +53,7 @@ class wp extends \PhpCore\Module\Startup
 }
 
 $rq = new \PhpCore\Request\Base();
-$rq->setBaseUrl("ww")->setUrlString("/ww/mn/news/sound_archive//box_2.k?id1=32");
+$rq->setBaseUrl("ww")->setUrlString("/ww/mn/news/sound_archive/box_2.html?id1=32");
 ///news/list/tab/top5?page=29
 
 echo "<pre>";
@@ -67,7 +67,7 @@ $route->setPattern("/<:lang>/news/sound_<:controller>/<:action>/<:enkhchimeg>_<:
                                "action" => array('reader', 'write', 'select')
                           ));
 
-$route->getPathsInfo();
+
 
 
 

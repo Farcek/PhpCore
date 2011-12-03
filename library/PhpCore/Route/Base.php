@@ -38,6 +38,15 @@ class Base
     {
         return $this;
     }
+    function getDefaults()
+    {
+        return array();
+    }
+
+    function getDefault($name)
+    {
+        return "";
+    }
 
     function getDefaultRequirement()
     {
@@ -62,13 +71,8 @@ class Base
 
     function matcher(\PhpCore\Request\Base $request)
     {
-        $paths = $this->getPathsInfo();
-        echo "<pre>" . print_r($this->pattern, true) . "</pre>";
-        echo "<pre>" . print_r($paths, true) . "</pre>";
-
+        $paths = $this->getPartsInfo();
         $rqString = $request->getUrlString();
-        echo "<pre>" . print_r($rqString, true) . "</pre>";
-        $rsu = array();
 
         //--------------------------------------------------
         $position = 0;
@@ -83,81 +87,81 @@ class Base
             if ($p === false) {
                 break;
             }
-
             if ($position > 0)
                 $splits[] = substr($rqString, $position, $p - $position);
-
-
             $position = $p + strlen($part);
-            echo "<pre>" . print_r("$p - $position - $maxPosition - $index", true) . "</pre>";
-
         }
         if ($position < $maxPosition) {
             $splits[] = substr($rqString, $position);
         }
-
-        var_dump($splits);
-
-
-        $rank = 0;
-        $oldIndex = -1;
-        while ($it = current($paths)) {
-            $k = key($paths);
-            if (is_int($k)) {
-                $p = strpos($rqString, $it);
-                if ($p === false) {
-                    return -1;
+        $rsu = array();
+        $index = 0;
+        foreach ($paths as $k => $it) {
+            if (is_string($k)) {
+                if(!isset($splits[$index]))break;
+                $k = $this->getRequirement($k);
+                $v = $splits[$index++];
+                if(empty($v)){
+                    $request->setParam($k,$this->get)
                 }
-                $rank++;
-                $rqString = substr($rqString, $p + strlen($it));
-                $oldIndex = $k;
-            } elseif (is_string($k)) {
-                if (isset($paths[$oldIndex + 1])) {
-                    $nextKey = $paths[$oldIndex + 1];
-                    $p = strpos($rqString, $nextKey);
-                    if ($p === false) {
-                        return -1;
-                    }
-                    $rank++;
-                    $rsu[$k] = $v = substr($rqString, 0, $p);
-
-                    $rqString = substr($rqString, $p);
-                } else {
-                    $rsu[$k] = $rqString;
-                    $rqString = "";
+                $rq = $this->getRequirement($k);
+                if(is_string($rq) ){
+                    if(preg_match($rq,$v))
+                        $request->setParam($k,$v);
+                    else
+                        return false;
+                }else if(is_array($rq)){
+                    if(in_array($v,$rq))
+                        $request->setParam($k,$v);
+                    else return false;
                 }
+
             }
-
-            next($paths);
         }
-        echo "<pre>" . print_r($rsu, true) . "</pre>";
-        return $rank;
+        
+        echo "<pre>".print_r($rsu,true)."</pre>";
 
     }
 
-    private $pathsInfo = null;
+    private $partsInfo = null;
 
-    function getPathsInfo()
+    function getPartsInfo()
     {
-        if ($this->pathsInfo == null) {
+        if ($this->partsInfo == null) {
             $p = $this->pattern;
 
             $bLen = strlen("<:");
             $eLen = strlen(">");
-            $this->pathsInfo = array();
+            $this->partsInfo = array();
 
-            while ($x = strpos($p, "<:")) {
-                $pt = substr($p, 0, $x);
-                //if ($pt)
-                $this->pathsInfo[] = $pt;
+            while (($x = strpos($p, "<:")) !== false) {
+                $this->partsInfo[] = $pt = substr($p, 0, $x);
+                if (empty($pt))
+                    throw new \PhpCore\Route\Exception\PatternFormat("Check pattern #" . $this->pattern);
+
                 $e = strpos($p, ">", $x);
                 $key = substr($p, $k = $x + $bLen, $e - $k);
-                $this->pathsInfo[$key] = $this->getRequirement($key);
+                $this->partsInfo[$key] = $this->getRequirement($key);
                 $p = substr($p, $e + $eLen);
+
             }
             if ($p)
-                $this->pathsInfo[] = $p;
+                $this->partsInfo[] = $p;
         }
-        return $this->pathsInfo;
+        return $this->partsInfo;
+    }
+}
+
+class patternItem
+{
+    var $type;
+    var $v;
+    var $index;
+
+    function __construct($type, $v, $i)
+    {
+        $this->type = $type;
+        $this->v = $v;
+        $this->index = $i;
     }
 }
